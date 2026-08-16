@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Buhrу Music</title>
+<title>BuHry Music</title>
 
 <style>
 * {
@@ -14,92 +14,118 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #0b0b0f;
+  background: #08090d;
   color: white;
   min-height: 100vh;
 }
 
 header {
-  padding: 30px 20px;
   text-align: center;
-  background: #111118;
+  padding: 35px 20px;
+  background: #11131a;
+  border-bottom: 1px solid #292c38;
 }
 
-header h1 {
-  font-size: 32px;
+.logo {
+  font-size: 38px;
+  font-weight: bold;
 }
 
-header p {
-  color: #999;
-  margin-top: 8px;
+.logo span {
+  color: #7c5cff;
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: #8d93a1;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 25px 18px 120px;
 }
 
 .search {
-  padding: 20px;
-}
-
-.search input {
   width: 100%;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  background: #181820;
+  padding: 17px;
+  border-radius: 16px;
+  border: 1px solid #30333d;
+  background: #171923;
   color: white;
-  font-size: 16px;
+  font-size: 17px;
   outline: none;
 }
 
-.section {
-  padding: 10px 20px 100px;
+.add {
+  margin-top: 14px;
+  width: 100%;
+  padding: 17px;
+  border: none;
+  border-radius: 16px;
+  background: #7c5cff;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.section h2 {
-  margin: 15px 0;
+.add:active {
+  transform: scale(.98);
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.playlist {
+  margin-top: 25px;
 }
 
 .song {
   display: flex;
   align-items: center;
-  gap: 15px;
-  background: #15151c;
+  gap: 14px;
   padding: 15px;
   margin-bottom: 10px;
-  border-radius: 14px;
+  background: #151720;
+  border: 1px solid #292c38;
+  border-radius: 15px;
+  cursor: pointer;
 }
 
-.cover {
-  width: 55px;
-  height: 55px;
-  background: #292938;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 25px;
+.song:hover {
+  background: #1b1e29;
+}
+
+.song-icon {
+  font-size: 28px;
 }
 
 .song-info {
   flex: 1;
+  overflow: hidden;
 }
 
-.song-info h3 {
-  font-size: 17px;
+.song-name {
+  font-size: 16px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.song-info p {
-  color: #888;
-  margin-top: 5px;
+.song-status {
+  color: #8d93a1;
   font-size: 13px;
+  margin-top: 4px;
 }
 
-.play {
-  border: none;
-  background: #ffffff;
-  color: #000;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  font-size: 18px;
+.empty {
+  text-align: center;
+  color: #8d93a1;
+  padding: 35px 10px;
 }
 
 .player {
@@ -107,23 +133,21 @@ header p {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #181820;
-  border-top: 1px solid #333;
-  padding: 12px 20px;
+  background: #11131a;
+  border-top: 1px solid #292c38;
+  padding: 15px 18px 20px;
+  backdrop-filter: blur(10px);
+}
+
+.now-playing {
   text-align: center;
+  margin-bottom: 10px;
+  color: #dfe1e8;
+  font-weight: bold;
 }
 
-.player-title {
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.controls button {
-  border: none;
-  background: transparent;
-  color: white;
-  font-size: 25px;
-  margin: 0 15px;
+audio {
+  width: 100%;
 }
 </style>
 </head>
@@ -131,108 +155,114 @@ header p {
 <body>
 
 <header>
-  <h1>🎵 Buhrу Music</h1>
-  <p>Твоя музыка — в одном месте</p>
+  <div class="logo">🎧 <span>BuHry</span> Music</div>
+  <div class="subtitle">Твоя музыка. В одном месте.</div>
 </header>
 
-<div class="search">
+<div class="container">
+
   <input
-    type="text"
+    class="search"
     id="search"
+    type="text"
     placeholder="🔎 Найти песню..."
-    oninput="searchSongs()"
   >
-</div>
 
-<div class="section">
-  <h2>🎧 Музыка</h2>
+  <label class="add">
+    ＋ Добавить музыку
+    <input id="fileInput" type="file" accept="audio/*" multiple>
+  </label>
 
-  <div id="songs">
-
-    <div class="song" data-name="Summer Dreams">
-      <div class="cover">🎵</div>
-      <div class="song-info">
-        <h3>Summer Dreams</h3>
-        <p>Open License Music</p>
-      </div>
-      <button class="play" onclick="playSong('Summer Dreams')">▶</button>
+  <div class="playlist" id="playlist">
+    <div class="empty">
+      Пока ничего не добавлено.<br>
+      Выбери музыку на устройстве 🎵
     </div>
-
-    <div class="song" data-name="Night Drive">
-      <div class="cover">🌙</div>
-      <div class="song-info">
-        <h3>Night Drive</h3>
-        <p>Open License Music</p>
-      </div>
-      <button class="play" onclick="playSong('Night Drive')">▶</button>
-    </div>
-
-    <div class="song" data-name="Dreaming">
-      <div class="cover">✨</div>
-      <div class="song-info">
-        <h3>Dreaming</h3>
-        <p>Open License Music</p>
-      </div>
-      <button class="play" onclick="playSong('Dreaming')">▶</button>
-    </div>
-
   </div>
+
 </div>
 
 <div class="player">
-  <div class="player-title" id="playerTitle">
-    Выбери песню
+  <div class="now-playing" id="nowPlaying">
+    Ничего не играет
   </div>
 
-  <div class="controls">
-    <button onclick="previousSong()">⏮</button>
-    <button onclick="togglePlay()">▶️</button>
-    <button onclick="nextSong()">⏭</button>
-  </div>
+  <audio id="audio" controls></audio>
 </div>
 
 <script>
-let currentSong = "";
+const fileInput = document.getElementById("fileInput");
+const playlist = document.getElementById("playlist");
+const audio = document.getElementById("audio");
+const nowPlaying = document.getElementById("nowPlaying");
+const search = document.getElementById("search");
 
-function playSong(name) {
-  currentSong = name;
-  document.getElementById("playerTitle").textContent =
-    "🎵 " + name;
-}
+let songs = [];
 
-function togglePlay() {
-  if (currentSong) {
-    alert("Сейчас: " + currentSong);
-  } else {
-    alert("Сначала выбери песню");
-  }
-}
+fileInput.addEventListener("change", function() {
+  const files = Array.from(this.files);
 
-function previousSong() {
-  alert("Предыдущая песня");
-}
-
-function nextSong() {
-  alert("Следующая песня");
-}
-
-function searchSongs() {
-  const text =
-    document.getElementById("search").value.toLowerCase();
-
-  const songs =
-    document.querySelectorAll(".song");
-
-  songs.forEach(song => {
-    const name =
-      song.dataset.name.toLowerCase();
-
-    if (name.includes(text)) {
-      song.style.display = "flex";
-    } else {
-      song.style.display = "none";
-    }
+  files.forEach(file => {
+    songs.push({
+      name: file.name,
+      url: URL.createObjectURL(file)
+    });
   });
+
+  renderSongs();
+});
+
+function renderSongs(filter = "") {
+  playlist.innerHTML = "";
+
+  const filtered = songs.filter(song =>
+    song.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
+    playlist.innerHTML = `
+      <div class="empty">
+        Ничего не найдено 🎵
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach((song, index) => {
+    const item = document.createElement("div");
+    item.className = "song";
+
+    item.innerHTML = `
+      <div class="song-icon">🎵</div>
+      <div class="song-info">
+        <div class="song-name">${escapeHtml(song.name)}</div>
+        <div class="song-status">Нажми, чтобы воспроизвести</div>
+      </div>
+      <div>▶️</div>
+    `;
+
+    item.addEventListener("click", () => {
+      playSong(song);
+    });
+
+    playlist.appendChild(item);
+  });
+}
+
+function playSong(song) {
+  audio.src = song.url;
+  audio.play();
+  nowPlaying.textContent = "🎧 " + song.name;
+}
+
+search.addEventListener("input", function() {
+  renderSongs(this.value);
+});
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }
 </script>
 
